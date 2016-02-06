@@ -1,0 +1,80 @@
+extends layout
+
+block content
+	.block-registration
+		.registration-header
+			.registration-icon
+			.registration-title Регистрация
+		.registration-content
+			.registration-form
+				.registration-form-email
+					.title E-Mail:
+					input(name='email', type='text')
+					.error
+				.registration-form-password
+					.title Пароль:
+					.visibility-panel(onclick='register.showPassword();')
+					//img(src='/img/icons/show-password.png')
+					.strength-panel
+						.strength-panel-border
+						.strength-panel-icon
+						.strength-panel-back
+					input(name='password', type='password')
+					.error
+				.registration-form-confirm-password
+					.title Повторите пароль:
+					input(name='confirm_password', type='password')
+					.error
+				.registration-form-firstname
+					.title Имя:
+					input(name='firstname', type='text')
+					.error
+
+				.registration-form-birthday
+					.title Дата рождения:
+					select#day
+					select#month
+						option(value='null') Месяц
+						option(name='1') Январь
+						option(name='2') Февраль
+						option(name='3') Март
+						option(name='4') Апрель
+						option(name='5') Май
+						option(name='6') Июнь
+						option(name='7') Июль
+						option(name='8') Август
+						option(name='9') Сентябрь
+						option(name='10') Октябрь
+						option(name='11') Ноябрь
+						option(name='12') Декабрь
+					select#year
+					.error
+				.registration-form-sex
+					.title Пол:
+					input#labelauty-1(type='radio', name='sex', value='0', data-value='Мужской')
+					input#labelauty-2(type='radio', name='sex', value='1', data-value='Женский')
+					.error
+
+				.registration-form-city
+					.title Город:
+					input(name='city', type='text')
+					.error
+				.registration-form-district
+					.title Район:
+					input(name='district', type='text')
+					.error
+				.registration-form-goal
+					//.title Цель знакомства:
+					select#goal
+						option(value='null') Цель знакомства
+						option(name='1') Найти новых друзей
+						option(name='2') Общение
+						option(name='3') Найти вторую половинку
+					.error
+				.registration-form-terms
+					input#labelauty-3(type='checkbox', name='terms', data-value="Я принимаю условия <a href='/terms'>Пользовательского Соглашения</a>")
+					.error
+				.btn.registration-form-submit Зарегистрироваться
+
+block scripts
+	script(src='/js/main.js')

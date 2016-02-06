@@ -1,0 +1,120 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('myapp:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+var io = require('socket.io').listen(server);
+io.on('connection', function(socket) {
+
+    var url = require("url");
+    var querystring = require("querystring");
+    var receiver_id = querystring.parse(url.parse(socket.handshake.headers.referer).query).id;
+
+    var user_id = 1;
+    //Проверяем, находится ли собеседник в комнате и коннектимся к нему. Если нет, то создаём комнату.
+    //Эмит событий только в комнату.
+    var connected_users = {};
+    connected_users[user_id] = socket;
+
+    // console.log(connected_users);
+
+    /* Dialog */
+    socket.on('message_add', function(message_text) {
+        //var user_id = 1;
+        var time = Math.round(new Date().getTime()/1000);
+        db.query('INSERT INTO chat_messages (message_add_date, message_author_id, message_receiver_id, message_text) VALUES ('+ time +','+ db.escape(user_id) +','+ db.escape(receiver_id) +','+ db.escape(message_text) +')');
+        
+        connected_users[user_id].emit('onGetMessage', message_text);
+        connected_users[receiver_id].emit('onGetMessage', message_text);
+    });
+    socket.on("user_start_typing", function(data) {
+        connected_users[receiver_id].emit("onStartTyping");
+    });
+    socket.on("user_stop_typing", function(data) {
+        connected_users[receiver_id].emit("onStopTyping");
+    });
+});
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

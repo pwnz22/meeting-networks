@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	.session_info= options.user_id
+	ul#messages
+		-for(var i=0; i<options.messages.length; i++) {
+			li= options.messages[i]["message_text"]
+		-}
+	.message_system_panel
+	.message_add_form
+		input(type='text', name='message_add_field')
+		.btn-1.message_add_button Отправить
+
+block scripts
+	script(src='/js/dialogs.js')

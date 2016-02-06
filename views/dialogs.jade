@@ -1,0 +1,19 @@
+extends layout
+
+block content
+	.dialogs_wrapper
+		.dialogs_count
+			.dialogs_count_name Всего диалогов:
+			.dialogs_count_value= Object.keys(options.dialogs).length
+		.dialogs_list
+			- for(var key in options.dialogs) {
+				.dialogs_item
+					.dialogs_item_receiver_avatar= options.dialogs[key][0]["message_receiver_avatar"]
+					.dialogs_item_receiver_status= options.dialogs[key][0]["message_receiver_status"]
+					.dialogs_item_receiver_name= key
+					.dialogs_item_last_message_time= options.dialogs[key][0]["message_add_time"]
+					.dialogs_item_last_message_text= options.dialogs[key][0]["message_text"]
+			- }
+
+block scripts
+	script(src='/js/dialogs.js')

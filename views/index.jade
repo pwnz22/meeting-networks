@@ -1,0 +1,22 @@
+extends layout
+
+block content
+	.session_info= options.user_id
+	.auth-form
+		.auth-form-fields
+			.auth-form-email
+				span.auth-form-label E-Mail:
+				input(name='email', type='text')
+			.auth-form-password
+				span.auth-form-label Пароль:
+				input(name='password', type='password')
+		.auth-form-panel
+			.auth-form-remember
+				input(name='remember', type='checkbox')
+				| Запомнить
+			.auth-form-recovery(onclick='auth.recoveryPassword();') Восстановить пароль
+		.auth-form-submit
+			.btn(onclick='auth.login();') Войти
+
+block scripts
+	script(src='/js/main.js')
